@@ -6,8 +6,19 @@ d3.json("/data/samples.json").then(function(data) {
     var sample_id = samples[0].id;
     
     // filter by desired sample
-    var graphSample = samples.filter(sample => sample.id === sample_id)[0];
+    var desiredSample = samples.filter(sample => sample.id === sample_id)[0];
     
+    // plot OSU values with desired sample 
+    graphTopOsu(desiredSample);
+
+    // plot bubble chart
+    graphBubble(desiredSample);
+
+    // display demographic info
+    displayDemoInfo(desiredSample);
+});
+
+function graphTopOsu(graphSample) {
     // grab top 10 OTU values
     var values = graphSample.sample_values.sort((a,b) => a < b).slice(0,10);
     
@@ -39,10 +50,10 @@ d3.json("/data/samples.json").then(function(data) {
     }
     // plot horizontal bar chart
     Plotly.newPlot("bar", traceBar, layoutBar);
+}
 
 
-
-
+function graphBubble(graphSample) {
     var traceBubble = [{
         x: graphSample.otu_ids, 
         y: graphSample.sample_values, 
@@ -60,6 +71,8 @@ d3.json("/data/samples.json").then(function(data) {
     };
 
     Plotly.newPlot("bubble", traceBubble, layoutBubble);
+}
 
-
-});
+function displayDemoInfo(graphSample) {
+    console.log(graphSample)
+}
