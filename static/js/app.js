@@ -1,5 +1,5 @@
 // populate drop down options
-d3.json("/data/samples.json").then(function(data) {
+d3.json("data/samples.json").then(function(data) {
     var options = data.names;
 
     options.forEach(option => {
@@ -15,7 +15,7 @@ d3.json("/data/samples.json").then(function(data) {
 
 // when an ID is chosen, display all graphs and information
 function optionChanged(selectedId) {
-    d3.json("/data/samples.json").then(function(data) {
+    d3.json("data/samples.json").then(function(data) {
         // grab samples
         var samples = data.samples;
         var metaData = data.metadata
