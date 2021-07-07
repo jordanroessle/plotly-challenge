@@ -5,8 +5,15 @@ d3.json("/data/samples.json").then(function(data) {
     options.forEach(option => {
         d3.select("#selDataset").append("option").text(`${option}`)
     });
+
+    // display inital graphs with id 940 (first option)
+    var firstOption = "940";
+    graphTopOsu(data.samples.filter(sample => sample.id === firstOption)[0]);
+    graphBubble(data.samples.filter(sample => sample.id === firstOption)[0]);
+    displayDemoInfo(data.metadata.filter(meta => meta.id === parseInt(firstOption))[0]);
 });
 
+// when an ID is chosen, display all graphs and information
 function optionChanged(selectedId) {
     d3.json("/data/samples.json").then(function(data) {
         // grab samples
@@ -32,7 +39,7 @@ function graphTopOsu(graphSample) {
     // grab top 10 OTU values
     var values = graphSample.sample_values.sort((a,b) => a < b).slice(0,10);
     
-    // grab labels for the top 10 OTU values
+    // grab labels and tooltip for the top 10 OTU values
     var labels = [];
     var hoverText = [];
     values.forEach(value => {
