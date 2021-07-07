@@ -1,25 +1,32 @@
+// populate drop down options
 d3.json("/data/samples.json").then(function(data) {
-    // grab samples
-    var samples = data.samples;
-    var metaData = data.metadata
-    
-    // define which sample is interested in
-    var sample_id = samples[0].id;
-    
-    // filter by desired sample
-    var desiredSample = samples.filter(sample => sample.id === sample_id)[0];
-    var desiredMeta = metaData.filter(meta => meta.id === parseInt(sample_id))[0];
+    var options = data.names;
 
-    // plot OSU values with desired sample 
-    graphTopOsu(desiredSample);
-
-    // plot bubble chart
-    graphBubble(desiredSample);
-
-    // display demographic info
-    displayDemoInfo(desiredMeta);
-
+    options.forEach(option => {
+        d3.select("#selDataset").append("option").text(`${option}`)
+    });
 });
+
+function optionChanged(selectedId) {
+    d3.json("/data/samples.json").then(function(data) {
+        // grab samples
+        var samples = data.samples;
+        var metaData = data.metadata
+        
+        // filter by desired sample
+        var desiredSample = samples.filter(sample => sample.id === selectedId)[0];
+        var desiredMeta = metaData.filter(meta => meta.id === parseInt(selectedId))[0];
+
+        // plot OSU values with desired sample 
+        graphTopOsu(desiredSample);
+
+        // plot bubble chart
+        graphBubble(desiredSample);
+
+        // display demographic info
+        displayDemoInfo(desiredMeta);
+    });
+}
 
 function graphTopOsu(graphSample) {
     // grab top 10 OTU values
