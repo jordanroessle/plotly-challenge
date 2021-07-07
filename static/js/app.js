@@ -1,13 +1,15 @@
 d3.json("/data/samples.json").then(function(data) {
     // grab samples
     var samples = data.samples;
+    var metaData = data.metadata
     
     // define which sample is interested in
     var sample_id = samples[0].id;
     
     // filter by desired sample
     var desiredSample = samples.filter(sample => sample.id === sample_id)[0];
-    
+    var desiredMeta = metaData.filter(meta => meta.id === parseInt(sample_id))[0];
+
     // plot OSU values with desired sample 
     graphTopOsu(desiredSample);
 
@@ -15,7 +17,8 @@ d3.json("/data/samples.json").then(function(data) {
     graphBubble(desiredSample);
 
     // display demographic info
-    displayDemoInfo(desiredSample);
+    displayDemoInfo(desiredMeta);
+
 });
 
 function graphTopOsu(graphSample) {
@@ -73,6 +76,15 @@ function graphBubble(graphSample) {
     Plotly.newPlot("bubble", traceBubble, layoutBubble);
 }
 
-function displayDemoInfo(graphSample) {
-    console.log(graphSample)
+function displayDemoInfo(metaDisplay) {
+    // select demogrpahic infomation box
+    var demoInfo = d3.select("#sample-metadata");
+
+    // empty box
+    demoInfo.html("");
+
+    // append paragraphs to display demographic information
+    Object.entries(metaDisplay).forEach(([key,value]) => {
+        demoInfo.append("p").text(`${key}: ${value}`);
+    });
 }
